@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="VISA MATRIX">
+  <rect width="1280" height="360" fill="#f3f4f6"/>
+  <circle cx="180" cy="180" r="150" fill="#2a73d9"/>
+  <path d="M24 182L285 86L108 228L24 182Z" fill="#ffffff" opacity="0.95"/>
+  <path d="M182 358L285 86L195 302L182 358Z" fill="#ffffff" opacity="0.95"/>
+  <text x="410" y="220" font-size="175" font-family="Arial, Helvetica, sans-serif" font-weight="800" fill="#052e6b" letter-spacing="4">VISA MATRIX</text>
+</svg>

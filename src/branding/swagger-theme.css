@@ -1,0 +1,67 @@
+:root {
+  --visa-primary: #2a73d9;
+  --visa-primary-dark: #052e6b;
+  --visa-accent: #1e5ab8;
+  --visa-bg: #f3f4f6;
+}
+
+.swagger-ui {
+  background: var(--visa-bg);
+}
+
+.swagger-ui .topbar {
+  background-color: var(--visa-primary-dark);
+  border-bottom: 3px solid var(--visa-primary);
+}
+
+.swagger-ui .topbar .download-url-wrapper {
+  display: none;
+}
+
+.swagger-ui .btn,
+.swagger-ui .opblock .opblock-summary-method,
+.swagger-ui .authorize,
+.swagger-ui .opblock-tag,
+.swagger-ui .response-col_status {
+  border-color: var(--visa-primary-dark) !important;
+}
+
+.swagger-ui .btn.execute,
+.swagger-ui .btn.authorize,
+.swagger-ui .authorization__btn,
+.swagger-ui .opblock.opblock-post .opblock-summary,
+.swagger-ui .opblock.opblock-put .opblock-summary,
+.swagger-ui .opblock.opblock-patch .opblock-summary {
+  background-color: var(--visa-primary) !important;
+  color: #fff !important;
+}
+
+.swagger-ui .btn.execute:hover,
+.swagger-ui .btn.authorize:hover,
+.swagger-ui .authorization__btn:hover {
+  background-color: var(--visa-accent) !important;
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary {
+  background: rgba(5, 46, 107, 0.07) !important;
+  border-color: var(--visa-primary-dark) !important;
+}
+
+.swagger-ui .scheme-container {
+  background: #fff;
+  box-shadow: 0 1px 8px rgba(5, 46, 107, 0.14);
+}
+
+
+.swagger-ui .topbar-wrapper img {
+  display: none;
+}
+
+.swagger-ui .topbar-wrapper::before {
+  content: '';
+  display: block;
+  width: 260px;
+  height: 72px;
+  background: url('/assets/visa-matrix-logo.svg') no-repeat left center;
+  background-size: contain;
+}

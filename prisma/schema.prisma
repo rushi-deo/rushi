@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  SUPER_ADMIN
+  COMPANY_ADMIN
+  SALES_MANAGER
+  ACCOUNTANT
+  HR_MANAGER
+  MARKETING_MANAGER
+  PROJECT_MANAGER
+  POS_MANAGER
+  EMPLOYEE
+  AUDITOR
+}
+
+enum PermissionAction {
+  create
+  read
+  update
+  delete
+  approve
+  export
+}
+
+model Company {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  baseCurrency String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  users        User[]
+  auditLogs    AuditLog[]
+  documents    Document[]
+
+  @@index([deletedAt])
+}
+
+model User {
+  id               String    @id @default(uuid()) @db.Uuid
+  companyId        String?   @db.Uuid
+  email            String    @unique
+  passwordHash     String
+  fullName         String
+  role             RoleName
+  isLocked         Boolean   @default(false)
+  googleId         String?
+  refreshTokenHash String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  company      Company?      @relation(fields: [companyId], references: [id])
+  permissions  UserPermission[]
+  loginHistory LoginHistory[]
+
+  @@index([companyId, role])
+  @@index([deletedAt])
+}
+
+model Permission {
+  id        String           @id @default(uuid()) @db.Uuid
+  module    String
+  action    PermissionAction
+  createdAt DateTime         @default(now())
+
+  users     UserPermission[]
+
+  @@unique([module, action])
+}
+
+model UserPermission {
+  userId       String @db.Uuid
+  permissionId String @db.Uuid
+
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, permissionId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  actorId   String?  @db.Uuid
+  companyId String?  @db.Uuid
+  module    String
+  action    String
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  @@index([companyId, module, createdAt])
+}
+
+model LoginHistory {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  ipAddress String
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id          String   @id @default(uuid()) @db.Uuid
+  companyId   String   @db.Uuid
+  ownerId     String   @db.Uuid
+  module      String
+  fileName    String
+  filePath    String
+  mimeType    String
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  company     Company  @relation(fields: [companyId], references: [id])
+
+  @@index([companyId, module])
+}
+
+model SalesLead {
+  id          String   @id @default(uuid()) @db.Uuid
+  companyId   String   @db.Uuid
+  title       String
+  status      String
+  value       Decimal? @db.Decimal(18,2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SalesOrder {
+  id          String   @id @default(uuid()) @db.Uuid
+  companyId   String   @db.Uuid
+  customerId  String   @db.Uuid
+  totalAmount Decimal  @db.Decimal(18,2)
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JournalEntry {
+  id          String   @id @default(uuid()) @db.Uuid
+  companyId   String   @db.Uuid
+  reference   String
+  totalDebit  Decimal  @db.Decimal(18,2)
+  totalCredit Decimal  @db.Decimal(18,2)
+  isLocked    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Employee {
+  id          String   @id @default(uuid()) @db.Uuid
+  companyId   String   @db.Uuid
+  userId      String?  @unique @db.Uuid
+  department  String
+  jobTitle    String
+  salary      Decimal  @db.Decimal(18,2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
